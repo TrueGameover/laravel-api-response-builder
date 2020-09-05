@@ -180,7 +180,11 @@ class Converter
             });
 
             foreach ($classes as $class_config) {
-                $converters[] = new $class_config[ResponseBuilder::KEY_HANDLER];
+                $converter = new $class_config[ResponseBuilder::KEY_HANDLER];
+
+                if ($converter instanceof ConverterContract) {
+                    $converters[] = $converter;
+                }
             }
         }
 
