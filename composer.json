@@ -2,7 +2,7 @@
   "name": "truegameover/laravel-api-response-builder",
   "description": "Helps building nice, normalized and easy to consume Laravel REST API.",
   "homepage": "https://github.com/TrueGameover/laravel-api-response-builder",
-  "version": "8.2.0",
+  "version": "8.2.1",
   "keywords": [
     "laravel",
     "json",
