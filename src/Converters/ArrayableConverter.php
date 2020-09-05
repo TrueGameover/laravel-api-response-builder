@@ -30,8 +30,6 @@ final class ArrayableConverter implements ConverterContract
      */
     public function convert($obj, /** @scrutinizer ignore-unused */ array $config): array
     {
-        Validator::assertInstanceOf('obj', $obj, Arrayable::class);
-
         return $obj->toArray();
     }
 

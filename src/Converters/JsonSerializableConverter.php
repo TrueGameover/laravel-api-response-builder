@@ -30,7 +30,7 @@ final class JsonSerializableConverter implements ConverterContract
 	 */
 	public function convert($obj, /** @scrutinizer ignore-unused */ array $config): array
 	{
-		return ['val' => \json_decode(json_encode($obj->jsonSerialize()), true)];
+		return [\json_decode(json_encode($obj->jsonSerialize()), true)];
 	}
 
     public function supports($obj, array $config): bool
