@@ -15,6 +15,7 @@ namespace MarcinOrlowski\ResponseBuilder;
  */
 
 use Illuminate\Support\Facades\Config;
+use MarcinOrlowski\ResponseBuilder\Contracts\ConverterContract;
 
 
 /**
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Config;
 class Converter
 {
     /**
-     * @var array
+     * @var ConverterContract[]
      */
     protected $classes = [];
 
@@ -54,29 +55,22 @@ class Converter
      * Throws \InvalidArgumentException if No data conversion mapping configured for given class.
      *
      * @param object $data Object to check mapping for.
+     * @param array $config Context configuration
      *
-     * @return array
+     * @return ConverterContract
      *
-     * @throws \InvalidArgumentException
      */
-    protected function getClassMappingConfigOrThrow(object $data): array
+    protected function getClassClassConverterOrThrow(object $data, array $config): ConverterContract
     {
         $result = null;
 
         // check for exact class name match...
         $cls = \get_class($data);
-        if (\is_string($cls)) {
-	        if (\array_key_exists($cls, $this->classes)) {
-		        $result = $this->classes[ $cls ];
-	        } else {
-		        // no exact match, then lets try with `instanceof`
-		        foreach (\array_keys($this->getClasses()) as $class_name) {
-			        if ($data instanceof $class_name) {
-				        $result = $this->classes[ $class_name ];
-				        break;
-			        }
-		        }
-	        }
+        foreach ($this->classes as $converter) {
+            if ($converter->supports($data, $config)) {
+                $result = $converter;
+                break;
+            }
         }
 
         if ($result === null) {
@@ -91,28 +85,25 @@ class Converter
      *
      * @param object|array|null $data
      *
+     * @param array $config
      * @return array|null
      *
-     * @throws \InvalidArgumentException
      */
-    public function convert($data = null): ?array
+    public function convert($data = null, array $config = []): ?array
     {
         if ($data === null) {
             return null;
         }
 
         Validator::assertIsType('data', $data, [Validator::TYPE_ARRAY,
-                                                Validator::TYPE_OBJECT]);
+            Validator::TYPE_OBJECT]);
 
         if (\is_object($data)) {
-            $cfg = $this->getClassMappingConfigOrThrow($data);
-            $worker = new $cfg[ ResponseBuilder::KEY_HANDLER ]();
-            $data = $worker->convert($data, $cfg);
-        } else {
-            $data = $this->convertArray($data);
+            $converter = $this->getClassClassConverterOrThrow($data, $config);
+            $data = $converter->convert($data, $config);
         }
 
-        return $data;
+        return $this->convertArray($data); // recursive converting
     }
 
     /**
@@ -121,11 +112,11 @@ class Converter
      *
      * @param array $data array to recursively convert known elements of
      *
+     * @param array $config
      * @return array
      *
-     * @throws \RuntimeException
      */
-    protected function convertArray(array $data): array
+    protected function convertArray(array $data, array $config = []): array
     {
         // This is to ensure that we either have array with user provided keys i.e. ['foo'=>'bar'], which will then
         // be turned into JSON object or array without user specified keys (['bar']) which we would return as JSON
@@ -148,12 +139,10 @@ class Converter
 
         foreach ($data as $key => $val) {
             if (\is_array($val)) {
-                $data[ $key ] = $this->convertArray($val);
+                $data[$key] = $this->convertArray($val);
             } elseif (\is_object($val)) {
-                $cfg = $this->getClassMappingConfigOrThrow($val);
-                $worker = new $cfg[ ResponseBuilder::KEY_HANDLER ]();
-                $converted_data = $worker->convert($val, $cfg);
-                $data[ $key ] = $converted_data;
+                $converter = $this->getClassClassConverterOrThrow($val, $config);
+                $data[$key] = $converter->convert($val, $config);
             }
         }
 
@@ -170,6 +159,7 @@ class Converter
     protected static function getClassesMapping(): array
     {
         $classes = Config::get(ResponseBuilder::CONF_KEY_CONVERTER);
+        $converters = [];
 
         if ($classes !== null) {
             if (!\is_array($classes)) {
@@ -177,20 +167,23 @@ class Converter
                     \sprintf('CONFIG: "classes" mapping must be an array (%s given)', \gettype($classes)));
             }
 
-            $mandatory_keys = [
-                ResponseBuilder::KEY_HANDLER,
-            ];
-            foreach ($classes as $class_name => $class_config) {
-                foreach ($mandatory_keys as $key_name) {
-                    if (!\array_key_exists($key_name, $class_config)) {
-                        throw new \RuntimeException("CONFIG: Missing '{$key_name}' for '{$class_name}' class mapping");
-                    }
+            usort($classes, function (array $first, array $second) {
+                if ($first['priority'] > $second['priority']) {
+                    return -1;
                 }
+
+                if ($first['priority'] < $second['priority']) {
+                    return 1;
+                }
+
+                return 0;
+            });
+
+            foreach ($classes as $class_config) {
+                $converters[] = new $class_config[ResponseBuilder::KEY_HANDLER];
             }
-        } else {
-            $classes = [];
         }
 
-        return $classes;
+        return $converters;
     }
 }

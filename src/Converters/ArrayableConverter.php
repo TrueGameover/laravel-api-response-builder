@@ -34,4 +34,9 @@ final class ArrayableConverter implements ConverterContract
 
         return $obj->toArray();
     }
+
+    public function supports($obj, array $config): bool
+    {
+        return $obj instanceof Arrayable;
+    }
 }

@@ -30,8 +30,11 @@ final class ToArrayConverter implements ConverterContract
      */
     public function convert($obj, /** @scrutinizer ignore-unused */ array $config): array
     {
-        Validator::assertIsObject('obj', $obj);
+        return (array)$obj;
+    }
 
-        return $obj->toArray();
+    public function supports($obj, array $config): bool
+    {
+        return is_object($obj);
     }
 }

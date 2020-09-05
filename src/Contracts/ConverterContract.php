@@ -25,4 +25,11 @@ interface ConverterContract
      * @return array
      */
     public function convert($obj, array $config): array;
+
+    /**
+     * @param $obj Object for check
+     * @param array $config
+     * @return bool is converter supports $obj
+     */
+    public function supports($obj, array $config): bool;
 }

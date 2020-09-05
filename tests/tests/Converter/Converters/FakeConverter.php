@@ -25,4 +25,9 @@ class FakeConverter implements ConverterContract
     {
         return [$this->key => $this->val];
     }
+
+    public function supports($obj, array $config): bool
+    {
+        return true;
+    }
 }
