@@ -270,7 +270,7 @@ class ResponseBuilder extends ResponseBuilderBase
 			Validator::assertOkHttpCode($http_code);
 
 			$result = $this->make($this->success, $api_code, $msg_or_api_code, $this->data, $http_code,
-				$this->placeholders, $http_headers, $this->json_opts);
+				$this->placeholders, $http_headers, $this->json_opts, $this->debug_data);
 		} else {
 			$http_code = $this->http_code ?? ResponseBuilder::DEFAULT_HTTP_CODE_ERROR;
 
