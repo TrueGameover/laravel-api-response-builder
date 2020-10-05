@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace MarcinOrlowski\ResponseBuilder\Converters;
+namespace MarcinOrlowski\ResponseBuilder\Contracts;
 
 /**
  * Laravel API Response Builder
@@ -13,11 +13,7 @@ namespace MarcinOrlowski\ResponseBuilder\Converters;
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      https://github.com/MarcinOrlowski/laravel-api-response-builder
  */
-
-use MarcinOrlowski\ResponseBuilder\Contracts\ConverterContract;
-use MarcinOrlowski\ResponseBuilder\Validator;
-
-final class ToArrayConverter implements ConverterContract
+interface NormalizationContract
 {
     /**
      * Returns array representation of the object.
@@ -28,13 +24,12 @@ final class ToArrayConverter implements ConverterContract
      *
      * @return array
      */
-    public function convert($obj, /** @scrutinizer ignore-unused */ array $config): array
-    {
-        return (array)$obj;
-    }
+    public function convert($obj, array $config): array;
 
-    public function supports($obj, array $config): bool
-    {
-        return is_object($obj);
-    }
+    /**
+     * @param $obj Object for check
+     * @param array $config
+     * @return bool is converter supports $obj
+     */
+    public function supports($obj, array $config): bool;
 }

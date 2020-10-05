@@ -14,9 +14,9 @@ namespace MarcinOrlowski\ResponseBuilder\Tests\Converters;
  * @link      https://github.com/MarcinOrlowski/laravel-api-response-builder
  */
 
-use MarcinOrlowski\ResponseBuilder\Contracts\ConverterContract;
+use MarcinOrlowski\ResponseBuilder\Contracts\NormalizationContract;
 
-class FakeConverter implements ConverterContract
+class FakeNormalization implements NormalizationContract
 {
     public $key = 'fake';
     public $val = 'converter';

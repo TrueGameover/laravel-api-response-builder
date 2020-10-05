@@ -1,6 +1,6 @@
 <?php
 
-namespace MarcinOrlowski\ResponseBuilder\Converters;
+namespace MarcinOrlowski\ResponseBuilder\Normalizers;
 
 /**
  * Laravel API Response Builder
@@ -14,10 +14,9 @@ namespace MarcinOrlowski\ResponseBuilder\Converters;
  */
 
 use Illuminate\Contracts\Support\Arrayable;
-use MarcinOrlowski\ResponseBuilder\Contracts\ConverterContract;
-use MarcinOrlowski\ResponseBuilder\Validator;
+use MarcinOrlowski\ResponseBuilder\Contracts\NormalizationContract;
 
-final class ArrayableConverter implements ConverterContract
+final class ArrayableNormalizer implements NormalizationContract
 {
     /**
      * Returns array representation of the object implementing Arrayable interface

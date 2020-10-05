@@ -44,15 +44,15 @@ return [
         |-----------------------------------------------------------------------------------------------------------
         */
         [
-            'handler' => \MarcinOrlowski\ResponseBuilder\Converters\JsonSerializableConverter::class,
+            'handler' => \MarcinOrlowski\ResponseBuilder\Converters\JsonSerializableNormalization::class,
             'priority'     => -8,
         ],
         [
-            'handler' => \MarcinOrlowski\ResponseBuilder\Converters\ArrayableConverter::class,
+            'handler' => \MarcinOrlowski\ResponseBuilder\Converters\ArrayableNormalization::class,
             'priority'     => -9,
         ],
         [
-            'handler' => \MarcinOrlowski\ResponseBuilder\Converters\ToArrayConverter::class,
+            'handler' => \MarcinOrlowski\ResponseBuilder\Converters\ToArrayNormalization::class,
             'priority'     => -10,
         ],
     ],

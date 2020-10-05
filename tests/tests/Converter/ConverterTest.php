@@ -16,9 +16,9 @@ namespace MarcinOrlowski\ResponseBuilder\Tests;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use MarcinOrlowski\ResponseBuilder\Converter;
-use MarcinOrlowski\ResponseBuilder\Converters\ToArrayConverter;
+use MarcinOrlowski\ResponseBuilder\Converters\ToArrayNormalization;
 use MarcinOrlowski\ResponseBuilder\ResponseBuilder;
-use MarcinOrlowski\ResponseBuilder\Tests\Converters\FakeConverter;
+use MarcinOrlowski\ResponseBuilder\Tests\Converters\FakeNormalization;
 use MarcinOrlowski\ResponseBuilder\Tests\Models\TestModel;
 use MarcinOrlowski\ResponseBuilder\Tests\Models\TestModelChild;
 
@@ -54,7 +54,7 @@ class ConverterTest extends TestCase
         // HAVING indirect mapping configuration (of parent class)
         Config::set(ResponseBuilder::CONF_KEY_CONVERTER, [
 	        \get_class($parent) => [
-                ResponseBuilder::KEY_HANDLER => ToArrayConverter::class,
+                ResponseBuilder::KEY_HANDLER => ToArrayNormalization::class,
             ],
         ]);
 
@@ -106,7 +106,7 @@ class ConverterTest extends TestCase
         // AND having its class configured for auto conversion
         Config::set(ResponseBuilder::CONF_KEY_CONVERTER, [
 	        \get_class($model) => [
-                ResponseBuilder::KEY_HANDLER => ToArrayConverter::class,
+                ResponseBuilder::KEY_HANDLER => ToArrayNormalization::class,
             ],
         ]);
 
@@ -141,7 +141,7 @@ class ConverterTest extends TestCase
         Config::set(ResponseBuilder::CONF_KEY_CONVERTER, [
 	        \get_class($model_1) => [
                 ResponseBuilder::KEY_KEY     => $conv_key,
-                ResponseBuilder::KEY_HANDLER => ToArrayConverter::class,
+                ResponseBuilder::KEY_HANDLER => ToArrayNormalization::class,
             ],
         ]);
 
@@ -184,7 +184,7 @@ class ConverterTest extends TestCase
         Config::set(ResponseBuilder::CONF_KEY_CONVERTER, [
 	        \get_class($model_1) => [
                 ResponseBuilder::KEY_KEY     => 'XXX',
-                ResponseBuilder::KEY_HANDLER => ToArrayConverter::class,
+                ResponseBuilder::KEY_HANDLER => ToArrayNormalization::class,
             ],
         ]);
 
@@ -222,7 +222,7 @@ class ConverterTest extends TestCase
         Config::set(ResponseBuilder::CONF_KEY_CONVERTER, [
 	        \get_class($model_1) => [
                 ResponseBuilder::KEY_KEY     => 'XXX',
-                ResponseBuilder::KEY_HANDLER => ToArrayConverter::class,
+                ResponseBuilder::KEY_HANDLER => ToArrayNormalization::class,
             ],
         ]);
 
@@ -263,7 +263,7 @@ class ConverterTest extends TestCase
         Config::set(ResponseBuilder::CONF_KEY_CONVERTER, [
 	        \get_class($model_1) => [
                 ResponseBuilder::KEY_KEY     => 'XXX',
-                ResponseBuilder::KEY_HANDLER => ToArrayConverter::class,
+                ResponseBuilder::KEY_HANDLER => ToArrayNormalization::class,
             ],
         ]);
 
@@ -304,7 +304,7 @@ class ConverterTest extends TestCase
         // AND having its class configured for auto conversion
         Config::set(ResponseBuilder::CONF_KEY_CONVERTER, [
 	        \get_class($model_1) => [
-                ResponseBuilder::KEY_HANDLER => ToArrayConverter::class,
+                ResponseBuilder::KEY_HANDLER => ToArrayNormalization::class,
             ],
         ]);
 
@@ -333,7 +333,7 @@ class ConverterTest extends TestCase
         // AND having its class configured for auto conversion
         Config::set(ResponseBuilder::CONF_KEY_CONVERTER, [
 	        \get_class($model_1) => [
-                ResponseBuilder::KEY_HANDLER => ToArrayConverter::class,
+                ResponseBuilder::KEY_HANDLER => ToArrayNormalization::class,
             ],
         ]);
 
@@ -358,7 +358,7 @@ class ConverterTest extends TestCase
         $this->assertNotEmpty($cfg);
 
         // HAVING custom converter set to replace built-in settings
-        $fake = new FakeConverter();
+        $fake = new FakeNormalization();
 
         $cfg[ Collection::class ][ ResponseBuilder::KEY_HANDLER ] = \get_class($fake);
         Config::set(ResponseBuilder::CONF_KEY_CONVERTER, $cfg);

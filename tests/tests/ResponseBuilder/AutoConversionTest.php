@@ -14,7 +14,7 @@ namespace MarcinOrlowski\ResponseBuilder\Tests;
  */
 
 use Illuminate\Support\Facades\Config;
-use MarcinOrlowski\ResponseBuilder\Converters\ToArrayConverter;
+use MarcinOrlowski\ResponseBuilder\Converters\ToArrayNormalization;
 use MarcinOrlowski\ResponseBuilder\ResponseBuilder;
 use MarcinOrlowski\ResponseBuilder\Tests\Models\TestModel;
 
@@ -35,7 +35,7 @@ class AutoConversionTest extends TestCase
         $model_class_name = \get_class($model);
         $cfg = [
             $model_class_name => [
-                ResponseBuilder::KEY_HANDLER => ToArrayConverter::class,
+                ResponseBuilder::KEY_HANDLER => ToArrayNormalization::class,
             ],
         ];
         Config::set(ResponseBuilder::CONF_KEY_CONVERTER, $cfg);
@@ -72,7 +72,7 @@ class AutoConversionTest extends TestCase
         $converter = [
             $model_class_name => [
                 ResponseBuilder::KEY_KEY     => 'should-not-be-used',
-                ResponseBuilder::KEY_HANDLER => ToArrayConverter::class,
+                ResponseBuilder::KEY_HANDLER => ToArrayNormalization::class,
             ],
         ];
         Config::set(ResponseBuilder::CONF_KEY_CONVERTER, $converter);

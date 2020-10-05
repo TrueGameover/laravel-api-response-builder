@@ -15,7 +15,7 @@ namespace MarcinOrlowski\ResponseBuilder;
  */
 
 use Illuminate\Support\Facades\Config;
-use MarcinOrlowski\ResponseBuilder\Contracts\ConverterContract;
+use MarcinOrlowski\ResponseBuilder\Contracts\NormalizationContract;
 
 
 /**
@@ -24,7 +24,7 @@ use MarcinOrlowski\ResponseBuilder\Contracts\ConverterContract;
 class Converter
 {
     /**
-     * @var ConverterContract[]
+     * @var NormalizationContract[]
      */
     protected $classes = [];
 
@@ -57,10 +57,10 @@ class Converter
      * @param object $data Object to check mapping for.
      * @param array $config Context configuration
      *
-     * @return ConverterContract
+     * @return NormalizationContract
      *
      */
-    protected function getClassClassConverterOrThrow(object $data, array $config): ConverterContract
+    protected function getClassClassConverterOrThrow(object $data, array $config): NormalizationContract
     {
         $result = null;
 
@@ -182,7 +182,7 @@ class Converter
             foreach ($classes as $class_config) {
                 $converter = new $class_config[ResponseBuilder::KEY_HANDLER];
 
-                if ($converter instanceof ConverterContract) {
+                if ($converter instanceof NormalizationContract) {
                     $converters[] = $converter;
                 }
             }
