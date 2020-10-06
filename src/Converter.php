@@ -143,6 +143,7 @@ class Converter
             } elseif (\is_object($val)) {
                 $converter = $this->getClassClassConverterOrThrow($val, $config);
                 $data[$key] = $converter->convert($val, $config);
+                $data[$key] = $this->convertArray($data[$key]);
             }
         }
 
